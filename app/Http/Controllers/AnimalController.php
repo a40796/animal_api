@@ -71,8 +71,7 @@ class AnimalController extends Controller
      */
     public function update(Request $request, Animal $animal)
     {
-        $animal->update($request->all());
-        return response($animal,200);
+        //
     }
 
     /**
@@ -83,7 +82,6 @@ class AnimalController extends Controller
      */
     public function destroy(Animal $animal)
     {
-        $animal->delete();
-        return response(null,204);
+        //
     }
 }
