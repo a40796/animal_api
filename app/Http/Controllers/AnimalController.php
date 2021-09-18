@@ -14,7 +14,8 @@ class AnimalController extends Controller
      */
     public function index()
     {
-        //
+        $animals = Animal::get();
+        return response(['data' => $animals],200);
     }
 
     /**
@@ -48,7 +49,7 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
-        //
+        return response($animal,200);
     }
 
     /**
