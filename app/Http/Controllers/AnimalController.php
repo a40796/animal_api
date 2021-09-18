@@ -12,10 +12,12 @@ class AnimalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request )
     {
-        $animals = Animal::get();
-        return response(['data' => $animals],200);
+
+        $limit = $request->limit ?? 10;
+        $animals = Animal::orderBy('id','desc')->paginate($limit)->appends($request->query());
+        return response($animals,200);
     }
 
     /**
