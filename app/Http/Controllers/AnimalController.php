@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Animal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AnimalController extends Controller
 {
@@ -16,7 +17,25 @@ class AnimalController extends Controller
     {
 
         $limit = $request->limit ?? 10;
-        $animals = Animal::orderBy('id','desc')->paginate($limit)->appends($request->query());
+
+        //建立查詢建構器
+        $query = Animal::query();
+
+        //programing logic for select
+        if(isset($request->filters)){
+            dump($request->filters);
+            $filters = explode(',',$request->filters);
+            dump($filters);
+            foreach($filters as $key => $filter){
+               list($key,$value) = explode(':',$filter);
+               dump($key,$value);
+               $query->where($key,'like',"%$value");
+            }
+        }
+        $animals = $query->orderBy('id','desc')
+        ->paginate($limit)
+        ->appends($request->query());
+
         return response($animals,200);
     }
 
@@ -38,9 +57,20 @@ class AnimalController extends Controller
      */
     public function store(Request $request)
     {
+
+        // $this->validate($request,[
+        //     'type_id' => 'nullable|integer' ,
+        //     'name' => 'required|string|max:255' ,
+        //     'birthday' => 'nullable|date',
+        //     'fix' => 'required|boolean',
+        //     'description' => 'nullalbe',
+        //     'personality' =>'nullable',
+        //     'user_id' => 'required'
+        // ]);
+
         $animal = Animal::create($request->all());
         $animal = $animal->refresh();
-        return response($animal,201);
+        return response($animal, 201);
     }
 
     /**
